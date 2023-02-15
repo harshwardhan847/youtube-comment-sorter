@@ -13,7 +13,11 @@ const CommentTable = ({ search, perPage }) => {
   useEffect(() => {
     updateComments();
     setPages(Math.round(totalResults / perPage));
-  }, []);
+  }, [perPage]);
+
+  useEffect(()=>{
+    
+  })
 
   const updateComments = async () => {
     // let url = `https://dev.ylytic.com/ylytic/test`;
@@ -63,42 +67,42 @@ const CommentTable = ({ search, perPage }) => {
   }
 
   return (
-    <div>
+    <div className="table-container">
       <table>
         <thead>
           <tr>
-            <th key="at" label="At">
-              at
-              <ArrowBtn
+            <th className="table-header" key="at" label="At">
+              At
+              <ArrowBtn className="arrow-btn"
                 allIcon="◆"
                 sortOrder={sortOrder}
                 onClick={() => sortAndToggle("at")}
               />
             </th>
-            <th key="author" label="Author">
-              author
-              <ArrowBtn
+            <th className="table-header" key="author" label="Author">
+              Author
+              <ArrowBtn className="arrow-btn"
                 sortOrder={sortOrder}
                 onClick={() => sortAndToggle("author")}
               />
             </th>
-            <th key="reply" label="Reply">
-              reply
-              <ArrowBtn
+            <th className="table-header" key="reply" label="Reply">
+              Reply
+              <ArrowBtn className="arrow-btn"
                 sortOrder={sortOrder}
                 onClick={() => sortAndToggle("reply")}
               />
             </th>
-            <th key="like" label="Like">
-              like
-              <ArrowBtn
+            <th className="table-header" key="like" label="Like">
+              Like
+              <ArrowBtn className="arrow-btn"
                 sortOrder={sortOrder}
                 onClick={() => sortAndToggle("like")}
               />
             </th>
-            <th key="text" label="Text">
-              text
-              <ArrowBtn
+            <th className="table-header" key="text" label="Text">
+              Text
+              <ArrowBtn className="arrow-btn"
                 sortOrder={sortOrder}
                 onClick={() => sortAndToggle("text")}
               />
@@ -114,7 +118,7 @@ const CommentTable = ({ search, perPage }) => {
                   item.author.toLowerCase().includes(search.toLowerCase());
           })
           .map((item, index) => (
-            <tbody key={index}>
+            <tbody className="table-body" key={index}>
               <tr>
                 <td>{item.at}</td>
                 <td>{item.author}</td>

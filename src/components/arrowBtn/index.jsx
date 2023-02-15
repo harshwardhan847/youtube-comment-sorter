@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-
-const ArrowBtn = ({onClick, allIcon}) => {
+import './style.scss'
+const ArrowBtn = ({onClick}) => {
   const [icon, seticon] = useState("▼");
   function changeSign() {
     seticon(icon === "▲" ? "▼" : "▲");

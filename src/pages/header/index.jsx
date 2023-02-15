@@ -6,7 +6,7 @@ const Header = () => {
   const [perPage, setPerPage] = useState("10");
   return (
     <header>
-      <h1>Youtube comment Sorter</h1>
+      <h1>Youtube Comment Sorter</h1>
       <input
         type="text"
         placeholder="Search"
@@ -15,10 +15,18 @@ const Header = () => {
         }}
       />
       <select name="pages" id="pages">
-        <option value="10" onClick={(e)=>setPerPage(e.target.value)}>10 per page</option>
-        <option value="20" onClick={(e)=>setPerPage(e.target.value)}>20 per page</option>
-        <option value="30" onClick={(e)=>setPerPage(e.target.value)}>30 per page</option>
-        <option value="50" onClick={(e)=>setPerPage(e.target.value)}>50 per page</option>
+        <option value="10" onClick={(e) => setPerPage(e.target.value)}>
+          10 per page
+        </option>
+        <option value="20" onClick={(e) => setPerPage(e.target.value)}>
+          20 per page
+        </option>
+        <option value="30" onClick={(e) => setPerPage(e.target.value)}>
+          30 per page
+        </option>
+        <option value="50" onClick={(e) => setPerPage(e.target.value)}>
+          50 per page
+        </option>
       </select>
       <CommentTable perPage={perPage} search={search} />
     </header>
