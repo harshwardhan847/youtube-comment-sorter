@@ -1,6 +1,8 @@
-
-
 header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   h1 {
     text-align: center;
     font-size: 3rem;
@@ -12,7 +14,29 @@ header {
     border: 1px solid black;
     margin-inline: 1em;
   }
-  select{
+  .btn-container {
+    margin-top: 4rem;
+    display: flex;
+    width: 80vw;
+    justify-content: space-between;
+    align-items: center;
+    .next-pre-btn {
+      cursor: pointer;
+      font-size: 1.4rem;
+      background-color: green;
+      color: white;
+      border: 2px solid green;
+      margin: 0.2em;
+      &:hover {
+        transition: 0.1s ease-in-out;
+        background-color: white;
+        color: green;
+        border: 2px solid green;
+      }
+    }
+  }
+
+  select {
     padding: 6px;
     margin-top: 8px;
     font-size: 17px;

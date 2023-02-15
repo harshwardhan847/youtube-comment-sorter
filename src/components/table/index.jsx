@@ -1,34 +1,31 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./style.scss";
-import allcomments from "../../comments";
 import ArrowBtn from "../arrowBtn";
-const CommentTable = ({ search, perPage }) => {
+const CommentTable = ({ search, perPage, currentPage }) => {
   const [comments, setComments] = useState([]);
+  const [currentComments, setCurrentComments] = useState([]);
   const [totalResults, setTotalResults] = useState(100);
   const [sortKey, setSortKey] = useState("at");
   const [sortOrder, setSortOrder] = useState("ascn");
-  const [pages, setPages] = useState();
-
 
   useEffect(() => {
-    updateComments();
-    setPages(Math.round(totalResults / perPage));
-  }, [perPage]);
+    const updatedComments = async () => {
+      await updateComments();
+      setCurrentComments(array_into_chunks(sortedData(), perPage));
+    };
+    updatedComments();
+    // eslint-disable-next-line
+  }, [perPage, totalResults, comments]);
 
-  useEffect(()=>{
-    
-  })
+  useEffect(() => {}, [currentComments]);
 
   const updateComments = async () => {
-    // let url = `https://dev.ylytic.com/ylytic/test`;
-    // let data = await fetch(url);
-    // let parsedData = await data.json();
-    const parsedData = allcomments;
+    let url = `https://dev.ylytic.com/ylytic/test`;
+    let data = await fetch(url);
+    let parsedData = await data.json();
     setComments(parsedData.comments);
     setTotalResults(parsedData.comments.length);
   };
-
-  
 
   function sortData({ comments, sortKey, reverse }) {
     // if(!sortKey) return comments
@@ -48,10 +45,9 @@ const CommentTable = ({ search, perPage }) => {
       const chunk = comments.splice(0, perPage);
       arr.push(chunk);
     }
-
     return arr;
   }
-
+  //sorting data
   const sortedData = useCallback(
     () =>
       sortData({
@@ -61,6 +57,7 @@ const CommentTable = ({ search, perPage }) => {
       }),
     [comments, sortKey, sortOrder]
   );
+  //arrow btn on click handler
   function sortAndToggle(key) {
     setSortOrder(sortOrder === "ascn" ? "desc" : "ascn");
     setSortKey(key);
@@ -73,7 +70,8 @@ const CommentTable = ({ search, perPage }) => {
           <tr>
             <th className="table-header" key="at" label="At">
               At
-              <ArrowBtn className="arrow-btn"
+              <ArrowBtn
+                className="arrow-btn"
                 allIcon="◆"
                 sortOrder={sortOrder}
                 onClick={() => sortAndToggle("at")}
@@ -81,28 +79,32 @@ const CommentTable = ({ search, perPage }) => {
             </th>
             <th className="table-header" key="author" label="Author">
               Author
-              <ArrowBtn className="arrow-btn"
+              <ArrowBtn
+                className="arrow-btn"
                 sortOrder={sortOrder}
                 onClick={() => sortAndToggle("author")}
               />
             </th>
             <th className="table-header" key="reply" label="Reply">
               Reply
-              <ArrowBtn className="arrow-btn"
+              <ArrowBtn
+                className="arrow-btn"
                 sortOrder={sortOrder}
                 onClick={() => sortAndToggle("reply")}
               />
             </th>
             <th className="table-header" key="like" label="Like">
               Like
-              <ArrowBtn className="arrow-btn"
+              <ArrowBtn
+                className="arrow-btn"
                 sortOrder={sortOrder}
                 onClick={() => sortAndToggle("like")}
               />
             </th>
             <th className="table-header" key="text" label="Text">
               Text
-              <ArrowBtn className="arrow-btn"
+              <ArrowBtn
+                className="arrow-btn"
                 sortOrder={sortOrder}
                 onClick={() => sortAndToggle("text")}
               />
@@ -110,8 +112,8 @@ const CommentTable = ({ search, perPage }) => {
           </tr>
         </thead>
 
-        {sortedData()
-          .filter((item) => {
+        {currentComments?.[currentPage]
+          ?.filter((item) => {
             return search.toLowerCase() === ""
               ? item
               : item.text.toLowerCase().includes(search.toLowerCase()) ||
