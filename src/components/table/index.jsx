@@ -20,13 +20,10 @@ const CommentTable = ({ search, perPage, currentPage }) => {
   );
   function sortData({ comments, sortKey, reverse }) {
     // if(!sortKey) return comments
-
-    console.log(comments);
     const sortedData = [...comments].sort((a, b) => {
       return a[sortKey] > b[sortKey] ? 1 : -1;
     });
 
-    console.log(comments);
     if (reverse) {
       return sortedData.reverse();
     }
@@ -36,12 +33,10 @@ const CommentTable = ({ search, perPage, currentPage }) => {
   useEffect(() => {
     const updatedComments = async () => {
       await updateComments();
-      console.log("fetch");
     };
     updatedComments();
   }, []);
   useEffect(() => {
-    console.log(comments);
     setCurrentComments(array_into_chunks(SortedData(), perPage));
 
     // eslint-disable-next-line
@@ -54,9 +49,26 @@ const CommentTable = ({ search, perPage, currentPage }) => {
     setLoading(true);
     let data = await fetch(url);
     let parsedData = await data.json();
-    setComments(parsedData.comments);
+    let commentsFetched = parsedData.comments;
+
+    //formatting date
+    commentsFetched.forEach((element) => {
+      element.at = formatShortDate(element.at);
+    });
+    console.log(commentsFetched);
+    setComments(commentsFetched);
     setLoading(false);
   };
+
+  //format date
+  function formatShortDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString();
+    
+    return `${year}/${month}/${day}`;
+  }
 
   //divide comments in pages
   function array_into_chunks(comments, perPage) {
