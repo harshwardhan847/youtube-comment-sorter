@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "./style.scss";
 import ArrowBtn from "../arrowBtn";
+import Spinner from "../spinner/Spinner";
 const CommentTable = ({ search, perPage, currentPage }) => {
   const [comments, setComments] = useState([]);
   const [currentComments, setCurrentComments] = useState([]);
   const [totalResults, setTotalResults] = useState(100);
   const [sortKey, setSortKey] = useState("at");
   const [sortOrder, setSortOrder] = useState("ascn");
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const updatedComments = async () => {
@@ -14,6 +16,7 @@ const CommentTable = ({ search, perPage, currentPage }) => {
       setCurrentComments(array_into_chunks(sortedData(), perPage));
     };
     updatedComments();
+    console.log("fetch");
     // eslint-disable-next-line
   }, [perPage, totalResults, comments]);
 
@@ -21,14 +24,16 @@ const CommentTable = ({ search, perPage, currentPage }) => {
 
   const updateComments = async () => {
     let url = `https://dev.ylytic.com/ylytic/test`;
+    setLoading(true);
     let data = await fetch(url);
     let parsedData = await data.json();
     setComments(parsedData.comments);
     setTotalResults(parsedData.comments.length);
+    setLoading(false)
+    
   };
 
   function sortData({ comments, sortKey, reverse }) {
-    // if(!sortKey) return comments
     const sortedData = comments.sort((a, b) => {
       return a[sortKey] > b[sortKey] ? 1 : -1;
     });
@@ -65,6 +70,7 @@ const CommentTable = ({ search, perPage, currentPage }) => {
 
   return (
     <div className="table-container">
+      <div className="comments">Comments per page - {perPage}</div>
       <table>
         <thead>
           <tr>
@@ -129,8 +135,10 @@ const CommentTable = ({ search, perPage, currentPage }) => {
                 <td>{item.text}</td>
               </tr>
             </tbody>
-          ))}
+          ))
+          }
       </table>
+      {loading && <Spinner />}
     </div>
   );
 };

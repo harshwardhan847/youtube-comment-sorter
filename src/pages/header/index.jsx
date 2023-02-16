@@ -44,11 +44,12 @@ const Header = () => {
         >
           Previous
         </button>
+        <span className="page-no">Page no - {currentPage+1}</span>
         {/* btn for next page */}
         <button
           className="next-pre-btn"
           onClick={() => {
-            if (currentPage === 100 / perPage) {
+            if (currentPage === (100 / perPage)-1) {
               return;
             }
             setCurrentPage(currentPage + 1);
