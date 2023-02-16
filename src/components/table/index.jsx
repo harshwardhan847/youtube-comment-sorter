@@ -7,8 +7,7 @@ const CommentTable = ({ search, perPage, currentPage }) => {
   const [currentComments, setCurrentComments] = useState([]);
   const [sortKey, setSortKey] = useState("at");
   const [sortOrder, setSortOrder] = useState("ascn");
-  const [loading, setLoading] = useState(false)
-
+  const [loading, setLoading] = useState(false);
 
   const SortedData = useCallback(
     () =>
@@ -21,35 +20,32 @@ const CommentTable = ({ search, perPage, currentPage }) => {
   );
   function sortData({ comments, sortKey, reverse }) {
     // if(!sortKey) return comments
-    
+
     console.log(comments);
     const sortedData = [...comments].sort((a, b) => {
       return a[sortKey] > b[sortKey] ? 1 : -1;
     });
-    
+
     console.log(comments);
     if (reverse) {
       return sortedData.reverse();
     }
     return sortedData;
   }
-  
 
-
-  useEffect(()=>{
+  useEffect(() => {
     const updatedComments = async () => {
       await updateComments();
-    console.log("fetch");
+      console.log("fetch");
     };
     updatedComments();
-  },[])
+  }, []);
   useEffect(() => {
     console.log(comments);
-    setCurrentComments(array_into_chunks(
-    SortedData(), perPage));
-    
+    setCurrentComments(array_into_chunks(SortedData(), perPage));
+
     // eslint-disable-next-line
-  }, [perPage,comments,sortKey,sortOrder]);
+  }, [perPage, comments, sortKey, sortOrder]);
 
   useEffect(() => {}, [currentComments]);
 
@@ -59,11 +55,8 @@ const CommentTable = ({ search, perPage, currentPage }) => {
     let data = await fetch(url);
     let parsedData = await data.json();
     setComments(parsedData.comments);
-    setLoading(false)
-    
+    setLoading(false);
   };
-
-  
 
   //divide comments in pages
   function array_into_chunks(comments, perPage) {
@@ -74,7 +67,7 @@ const CommentTable = ({ search, perPage, currentPage }) => {
     }
     return arr;
   }
-  
+
   //arrow btn on click handler
   function sortAndToggle(key) {
     setSortOrder(sortOrder === "ascn" ? "desc" : "ascn");
@@ -148,10 +141,11 @@ const CommentTable = ({ search, perPage, currentPage }) => {
                 <td>{item.text}</td>
               </tr>
             </tbody>
-          ))
-          }
+          ))}
       </table>
-      {loading && <Spinner />}
+      <div className="spinner">
+        {loading && <Spinner className="spinner-comp" />}
+      </div>
     </div>
   );
 };

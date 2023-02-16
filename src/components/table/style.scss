@@ -3,6 +3,12 @@
     margin: 1em;
     text-align: center;
   }
+  .spinner{
+    // width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   table {
     padding: 2rem;
     font-size: 1rem;
