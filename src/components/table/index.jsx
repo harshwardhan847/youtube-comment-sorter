@@ -5,20 +5,51 @@ import Spinner from "../spinner/Spinner";
 const CommentTable = ({ search, perPage, currentPage }) => {
   const [comments, setComments] = useState([]);
   const [currentComments, setCurrentComments] = useState([]);
-  const [totalResults, setTotalResults] = useState(100);
   const [sortKey, setSortKey] = useState("at");
   const [sortOrder, setSortOrder] = useState("ascn");
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
+
+  const SortedData = useCallback(
+    () =>
+      sortData({
+        comments,
+        sortKey,
+        reverse: sortOrder === "desc",
+      }),
+    [comments, sortKey, sortOrder]
+  );
+  function sortData({ comments, sortKey, reverse }) {
+    // if(!sortKey) return comments
+    
+    console.log(comments);
+    const sortedData = [...comments].sort((a, b) => {
+      return a[sortKey] > b[sortKey] ? 1 : -1;
+    });
+    
+    console.log(comments);
+    if (reverse) {
+      return sortedData.reverse();
+    }
+    return sortedData;
+  }
+  
+
+
+  useEffect(()=>{
     const updatedComments = async () => {
       await updateComments();
-      setCurrentComments(array_into_chunks(sortedData(), perPage));
+    console.log("fetch");
     };
     updatedComments();
-    console.log("fetch");
+  },[])
+  useEffect(() => {
+    console.log(comments);
+    setCurrentComments(array_into_chunks(
+    SortedData(), perPage));
+    
     // eslint-disable-next-line
-  }, [perPage, totalResults, comments]);
+  }, [perPage,comments,sortKey,sortOrder]);
 
   useEffect(() => {}, [currentComments]);
 
@@ -28,20 +59,11 @@ const CommentTable = ({ search, perPage, currentPage }) => {
     let data = await fetch(url);
     let parsedData = await data.json();
     setComments(parsedData.comments);
-    setTotalResults(parsedData.comments.length);
     setLoading(false)
     
   };
 
-  function sortData({ comments, sortKey, reverse }) {
-    const sortedData = comments.sort((a, b) => {
-      return a[sortKey] > b[sortKey] ? 1 : -1;
-    });
-    if (reverse) {
-      return sortedData.reverse();
-    }
-    return sortedData;
-  }
+  
 
   //divide comments in pages
   function array_into_chunks(comments, perPage) {
@@ -52,16 +74,7 @@ const CommentTable = ({ search, perPage, currentPage }) => {
     }
     return arr;
   }
-  //sorting data
-  const sortedData = useCallback(
-    () =>
-      sortData({
-        comments,
-        sortKey,
-        reverse: sortOrder === "desc",
-      }),
-    [comments, sortKey, sortOrder]
-  );
+  
   //arrow btn on click handler
   function sortAndToggle(key) {
     setSortOrder(sortOrder === "ascn" ? "desc" : "ascn");
